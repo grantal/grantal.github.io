@@ -96,7 +96,6 @@
 				loader.load( 'models/cube.obj', function ( object ) {
 
 					object.traverse( function ( child ) {
-
 						if ( child instanceof THREE.Mesh ) {
 
 							child.material.map = texture;
@@ -105,7 +104,8 @@
 
 					} );
 
-					object.position.y = - 95;
+					//object.position.y = - 95;
+          object.scale.set(50,50,50);
 					scene.add( object );
 
 				}, onProgress, onError );
