@@ -2,9 +2,9 @@ precision mediump float;
 
 attribute vec3 aPosition;
 
-varying vec2 coord;
+varying vec4 vColor;
 
 void main() {
-    coord = vec2(1.0, 1.0);
     gl_Position = vec4(aPosition, 1.0);
+    vColor = vec4(1.0,0.0,0.0,1.0);
 }
