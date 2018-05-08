@@ -5,7 +5,11 @@ function $(s) {
 
 function Demo() {
     var igloo    = this.igloo = new Igloo($('#my-canvas')[0]);
-    this.quad    = igloo.array(Igloo.QUAD2);
+    this.quad    = igloo.array(new Float32Array([
+        // front face
+
+        
+        ]));
     this.image   = igloo.texture($('#image')[0]);
     this.program = igloo.program('glsl/project.vert', 'glsl/tint.frag');
     this.tick    = 0;
@@ -17,7 +21,7 @@ Demo.prototype.draw = function() {
     this.program.use()
         .uniform('tint', tint)
         .uniformi('image', 0)
-        .attrib('points', this.quad, 2)
+        .attrib('aPosition', this.positions, 3)
         .draw(this.igloo.gl.TRIANGLE_STRIP, Igloo.QUAD2.length / 2);
     this.tick++;
 };
