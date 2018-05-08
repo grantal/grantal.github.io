@@ -33,11 +33,25 @@
 		<script src="js/three.min.js"></script>
 		<script src="js/OBJLoader.js"></script>
 
+		<script type="x-shader/x-vertex" id="vertexshader">
+			void main() {
+			  gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+			}
+		</script>
+		<script type="x-shader/x-fragment" id="fragmentshader">
+			uniform vec3 color;
+			void main() {
+				gl_FragColor = vec4(color, 1.0 );
+			}
+		</script>
+
 		<script>
 
 			var container;
 
 			var camera, scene, renderer;
+
+      var uniforms;
 
 			var mouseX = 0, mouseY = 0;
 
@@ -68,20 +82,21 @@
 				camera.add( pointLight );
 				scene.add( camera );
 
-				// texture
+        // shaders
 
-				var manager = new THREE.LoadingManager();
-				manager.onProgress = function ( item, loaded, total ) {
+        uniforms = {
+            color:     { value: new THREE.Color( 0xff2200 ) }
+        };
 
-					console.log( item, loaded, total );
-
-				};
-
-				var textureLoader = new THREE.TextureLoader( manager );
-				var texture = textureLoader.load( 'textures/UV_Grid_Sm.jpg' );
+        var shaderMaterial = new THREE.ShaderMaterial( {
+            uniforms: uniforms,
+            vertexShader:document.getElementById( 'vertexshader' ).textContent,
+            fragmentShader: document.getElementById( 'fragmentshader' ).textContent
+        });
 
 				// model
 
+				var manager = new THREE.LoadingManager();
 				var onProgress = function ( xhr ) {
 					if ( xhr.lengthComputable ) {
 						var percentComplete = xhr.loaded / xhr.total * 100;
@@ -94,20 +109,11 @@
 
 				var loader = new THREE.OBJLoader( manager );
 				loader.load( 'models/cube.obj', function ( object ) {
-
-					object.traverse( function ( child ) {
-						if ( child instanceof THREE.Mesh ) {
-
-							child.material.map = texture;
-
-						}
-
-					} );
-
-					//object.position.y = - 95;
-          object.scale.set(50,50,50);
-					scene.add( object );
-
+          // we need to get the geomery of the object3D so we can add our material to it
+          var geometry = object.children[0].geometry;
+          let shadeMesh = new THREE.Mesh(geometry, shaderMaterial);
+          shadeMesh.scale.set(50,50,50);
+					scene.add(shadeMesh);
 				}, onProgress, onError );
 
 				//
