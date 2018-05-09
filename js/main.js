@@ -13,7 +13,6 @@ var windowHalfY = window.innerHeight / 2;
 init();
 animate();
 
-
 function init() {
 
     container = document.createElement( "div" );
@@ -33,17 +32,12 @@ function init() {
     camera.add( pointLight );
     scene.add( camera );
 
-    // shaders
+    // uniforms for shaders
 
     uniforms = {
-        color:     { value: new THREE.Color( 0xff2200 ) }
+        color:     { value: new THREE.Color( 0xffff00 ) }
     };
 
-    var shaderMaterial = new THREE.ShaderMaterial( {
-        uniforms: uniforms,
-        vertexShader:document.getElementById( "vertexshader" ).textContent,
-        fragmentShader: document.getElementById( "fragmentshader" ).textContent
-    });
 
     // model
 
@@ -59,13 +53,24 @@ function init() {
     };
 
     var loader = new THREE.OBJLoader( manager );
-    loader.load( "models/cube.obj", function ( object ) {
-        // we need to get the geomery of the object3D so we can add our material to it
-        var geometry = object.children[0].geometry;
-        let shadeMesh = new THREE.Mesh(geometry, shaderMaterial);
-        shadeMesh.scale.set(50,50,50);
-        scene.add(shadeMesh);
-    }, onProgress, onError );
+    // load shaders, then load object
+    ShaderLoader("glsl/cube.vert", "glsl/scatter.frag",
+        function (vertex, fragment) {
+            var shaderMaterial = new THREE.ShaderMaterial( {
+                uniforms: uniforms,
+                vertexShader:vertex,
+                fragmentShader:fragment
+            });
+
+            loader.load( "models/cube.obj", function ( object ) {
+                // we need to get the geomery of the object3D so we can add our material to it
+                var geometry = object.children[0].geometry;
+                let shadeMesh = new THREE.Mesh(geometry, shaderMaterial);
+                shadeMesh.scale.set(50,50,50);
+                scene.add(shadeMesh);
+            }, onProgress, onError );
+        }
+    );
 
     //
 
