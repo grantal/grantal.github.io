@@ -35,7 +35,8 @@ function init() {
     // uniforms for shaders
 
     uniforms = {
-        color:     { value: new THREE.Color( 0xffff00 ) }
+        uColor:     { value: new THREE.Color( 0x5e90e0 ) },
+        uDropoff:   { value: 4.0 }
     };
 
 
