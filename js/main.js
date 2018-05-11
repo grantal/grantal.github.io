@@ -36,7 +36,8 @@ function init() {
 
     uniforms = {
         uColor:     { value: new THREE.Color( 0x5e90e0 ) },
-        uDropoff:   { value: 4.0 }
+        uDropoff:   { value: 4.0 },
+        uTick:      { value: 1.0 },
     };
 
 
@@ -117,6 +118,8 @@ function animate() {
 }
 
 function render() {
+
+    uniforms.uTick.value = (Date.now()/100) % 100; 
 
     camera.position.x += ( mouseX - camera.position.x ) * .05;
     camera.position.y += ( - mouseY - camera.position.y ) * .05;

@@ -1,5 +1,6 @@
 uniform vec3 uColor;
 uniform float uDropoff;
+uniform float uTick;
 varying vec3 vPos;
 
 void main() {
@@ -12,5 +13,13 @@ void main() {
     float xz = xDiff + zDiff;
     float brightness = min(xy, yz);
     brightness = 1.0 - (uDropoff*min(brightness, xz));
+
+    // semi-randomly choose to not render fragment
+    float vPoses = length(vPos.x + vPos.y + vPos.z);
+    int randomd = int((vPoses)*100.0) - (int((vPoses)*10.0)*10);
+    if (randomd > int(uTick) - 10 || randomd < (int(uTick) + 10)){
+        brightness = 0.0;
+    }
+
     gl_FragColor = vec4(brightness*uColor, 1.0);
 }
