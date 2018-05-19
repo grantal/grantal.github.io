@@ -17,8 +17,10 @@ void main() {
     // semi-randomly choose to not render fragment
     float vPoses = length(vPos.x + vPos.y + vPos.z);
     int randomd = int((vPoses)*100.0) - (int((vPoses)*10.0)*10);
-    if (randomd > int(uTick) - 10 || randomd < (int(uTick) + 10)){
-        brightness = 0.0;
+    if (randomd > int(uTick) - 2){
+        if (randomd < (int(uTick) + 2)){
+            brightness = 0.0;
+        }
     }
 
     gl_FragColor = vec4(brightness*uColor, 1.0);

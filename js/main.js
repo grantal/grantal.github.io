@@ -119,7 +119,7 @@ function animate() {
 
 function render() {
 
-    uniforms.uTick.value = (Date.now()/100) % 100; 
+    uniforms.uTick.value = (Date.now()/100) % 10; 
 
     camera.position.x += ( mouseX - camera.position.x ) * .05;
     camera.position.y += ( - mouseY - camera.position.y ) * .05;
