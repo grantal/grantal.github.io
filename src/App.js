@@ -6,9 +6,7 @@ import ThreeScene from './ThreeScene.js';
 class App extends Component {
   render() {
     return (
-      <div className="App">
         <ThreeScene></ThreeScene>
-      </div>
     );
   }
 }
