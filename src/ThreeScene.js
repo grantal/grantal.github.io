@@ -87,7 +87,23 @@ class ThreeScene extends Component{
     this.points = new THREE.Points( geometry, material );
     this.scene.add( this.points );
 
-    //
+    // ROTATION Animation
+    // Rotation should be performed using quaternions, using a QuaternionKeyframeTrack
+    // Interpolating Euler angles (.rotation property) can be problematic and is currently not supported
+    // set up rotation about x axis
+    var xAxis = new THREE.Vector3( 1, 0, 0 );
+    var qInitial = new THREE.Quaternion().setFromAxisAngle( xAxis, 0 );
+    var qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, (Math.PI/2) );
+    var quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 1, 2 ], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w, qInitial.x, qInitial.y, qInitial.z, qInitial.w ] );
+
+    // create an animation sequence with the tracks
+    // If a negative time value is passed, the duration will be calculated from the times of the passed tracks array
+    var clip = new THREE.AnimationClip( 'Action', 3, [quaternionKF] );
+    // setup the AnimationMixer
+    this.mixer = new THREE.AnimationMixer( this.points );
+    // create a ClipAction and set it to play
+    var clipAction = this.mixer.clipAction( clip );
+    clipAction.play();
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setPixelRatio( window.devicePixelRatio );
@@ -95,7 +111,7 @@ class ThreeScene extends Component{
 
     this.mount.appendChild(this.renderer.domElement)
 
-    //
+    this.clock = new THREE.Clock();
 
     window.addEventListener( 'resize', this.onWindowResize, false );
 
@@ -124,14 +140,16 @@ stop = () => {
   }
 
 animate = () => {
-   this.points.rotation.x += 0.01
-   this.points.rotation.y += 0.01
-
    this.renderScene()
    this.frameId = window.requestAnimationFrame(this.animate)
  }
 
 renderScene = () => {
+  let delta = this.clock.getDelta();
+  if (this.mixer) {
+    this.mixer.update(delta);
+  }
+
   this.renderer.render(this.scene, this.camera)
 }
 
