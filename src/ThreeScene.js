@@ -94,16 +94,17 @@ class ThreeScene extends Component{
     var xAxis = new THREE.Vector3( 1, 0, 0 );
     var qInitial = new THREE.Quaternion().setFromAxisAngle( xAxis, 0 );
     var qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, (Math.PI/2) );
-    var quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 1, 2 ], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w, qInitial.x, qInitial.y, qInitial.z, qInitial.w ] );
+    var quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 1], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w] );
 
     // create an animation sequence with the tracks
     // If a negative time value is passed, the duration will be calculated from the times of the passed tracks array
-    var clip = new THREE.AnimationClip( 'Action', 3, [quaternionKF] );
+    var clip = new THREE.AnimationClip( 'Action', 1, [quaternionKF] );
     // setup the AnimationMixer
     this.mixer = new THREE.AnimationMixer( this.points );
     // create a ClipAction and set it to stop when finished
     this.clipAction = this.mixer.clipAction( clip );
     this.clipAction.loop = THREE.LoopOnce;
+    this.clipAction.clampWhenFinished = true;
 
 
     this.renderer = new THREE.WebGLRenderer();
@@ -155,8 +156,10 @@ renderScene = () => {
 }
 
 rotateUp = () => {
+  if (!this.clipAction.isRunning()){
     this.clipAction.reset();
     this.clipAction.play();
+  }
 }
 
 render(){
