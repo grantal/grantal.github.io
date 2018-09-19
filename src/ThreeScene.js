@@ -107,18 +107,14 @@ class ThreeScene extends Component{
     // create a ClipAction and set it to stop when finished
     this.upClipAction = this.mixer.clipAction( upClip );
     this.upClipAction.loop = THREE.LoopOnce;
-    //this.upClipAction.clampWhenFinished = true;
 
     qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, -(Math.PI/2) );
     quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 1], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w] );
 
-    // create an animation sequence with the tracks
-    // If a negative time value is passed, the duration will be calculated from the times of the passed tracks array
+    // Down rotation clip
     var downClip = new THREE.AnimationClip( 'Down', 1, [quaternionKF] );
-    // create a ClipAction and set it to stop when finished
     this.downClipAction = this.mixer.clipAction( downClip );
     this.downClipAction.loop = THREE.LoopOnce;
-    //this.downClipAction.clampWhenFinished = true;
 
 
     this.renderer = new THREE.WebGLRenderer();
