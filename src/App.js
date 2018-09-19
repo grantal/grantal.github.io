@@ -14,6 +14,9 @@ class App extends Component {
     if(key === 'up'){
       this.threeScene.current.rotateUp();
     }
+    if(key === 'down'){
+      this.threeScene.current.rotateDown();
+    }
   }
 
   render() {

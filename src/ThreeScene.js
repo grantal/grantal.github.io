@@ -87,10 +87,15 @@ class ThreeScene extends Component{
     this.points = new THREE.Points( geometry, material );
     this.scene.add( this.points );
 
+    // setup the AnimationMixer
+    this.mixer = new THREE.AnimationMixer( this.points );
+
     // ROTATION Animation
     // Rotation should be performed using quaternions, using a QuaternionKeyframeTrack
     // Interpolating Euler angles (.rotation property) can be problematic and is currently not supported
     // set up rotation about x axis
+
+    // first make up rotation
     var xAxis = new THREE.Vector3( 1, 0, 0 );
     var qInitial = new THREE.Quaternion().setFromAxisAngle( xAxis, 0 );
     var qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, (Math.PI/2) );
@@ -98,13 +103,22 @@ class ThreeScene extends Component{
 
     // create an animation sequence with the tracks
     // If a negative time value is passed, the duration will be calculated from the times of the passed tracks array
-    var clip = new THREE.AnimationClip( 'Action', 1, [quaternionKF] );
-    // setup the AnimationMixer
-    this.mixer = new THREE.AnimationMixer( this.points );
+    var upClip = new THREE.AnimationClip( 'Up', 1, [quaternionKF] );
     // create a ClipAction and set it to stop when finished
-    this.clipAction = this.mixer.clipAction( clip );
-    this.clipAction.loop = THREE.LoopOnce;
-    this.clipAction.clampWhenFinished = true;
+    this.upClipAction = this.mixer.clipAction( upClip );
+    this.upClipAction.loop = THREE.LoopOnce;
+    //this.upClipAction.clampWhenFinished = true;
+
+    qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, -(Math.PI/2) );
+    quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 1], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w] );
+
+    // create an animation sequence with the tracks
+    // If a negative time value is passed, the duration will be calculated from the times of the passed tracks array
+    var downClip = new THREE.AnimationClip( 'Down', 1, [quaternionKF] );
+    // create a ClipAction and set it to stop when finished
+    this.downClipAction = this.mixer.clipAction( downClip );
+    this.downClipAction.loop = THREE.LoopOnce;
+    //this.downClipAction.clampWhenFinished = true;
 
 
     this.renderer = new THREE.WebGLRenderer();
@@ -156,9 +170,16 @@ renderScene = () => {
 }
 
 rotateUp = () => {
-  if (!this.clipAction.isRunning()){
-    this.clipAction.reset();
-    this.clipAction.play();
+  if (!this.upClipAction.isRunning()){
+    this.upClipAction.reset();
+    this.upClipAction.play();
+  }
+}
+
+rotateDown = () => {
+  if (!this.downClipAction.isRunning()){
+    this.downClipAction.reset();
+    this.downClipAction.play();
   }
 }
 
