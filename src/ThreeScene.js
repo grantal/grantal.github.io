@@ -102,8 +102,7 @@ class ThreeScene extends Component{
     // setup the AnimationMixer
     this.mixer = new THREE.AnimationMixer( this.points );
     // create a ClipAction and set it to play
-    var clipAction = this.mixer.clipAction( clip );
-    clipAction.play();
+    this.clipAction = this.mixer.clipAction( clip );
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setPixelRatio( window.devicePixelRatio );
@@ -151,6 +150,10 @@ renderScene = () => {
   }
 
   this.renderer.render(this.scene, this.camera)
+}
+
+rotateUp = () => {
+    this.clipAction.play();
 }
 
 render(){
