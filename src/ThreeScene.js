@@ -103,19 +103,33 @@ class ThreeScene extends Component{
 
     // create an animation sequence with the tracks
     // If a negative time value is passed, the duration will be calculated from the times of the passed tracks array
-    var upClip = new THREE.AnimationClip( 'Up', 1, [quaternionKF] );
+    var clip = new THREE.AnimationClip( 'Up', 1, [quaternionKF] );
     // create a ClipAction and set it to stop when finished
-    this.upClipAction = this.mixer.clipAction( upClip );
+    this.upClipAction = this.mixer.clipAction( clip );
     this.upClipAction.loop = THREE.LoopOnce;
 
+    // Down rotation clip
     qFinal = new THREE.Quaternion().setFromAxisAngle( xAxis, -(Math.PI/2) );
     quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 1], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w] );
-
-    // Down rotation clip
-    var downClip = new THREE.AnimationClip( 'Down', 1, [quaternionKF] );
-    this.downClipAction = this.mixer.clipAction( downClip );
+    clip = new THREE.AnimationClip( 'Down', 1, [quaternionKF] );
+    this.downClipAction = this.mixer.clipAction( clip );
     this.downClipAction.loop = THREE.LoopOnce;
 
+    // Right rotation clip
+    var yAxis = new THREE.Vector3( 0, 1, 0 );
+    qInitial = new THREE.Quaternion().setFromAxisAngle( yAxis, 0 );
+    qFinal = new THREE.Quaternion().setFromAxisAngle( yAxis, -(Math.PI/2) );
+    quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 1], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w] );
+    clip = new THREE.AnimationClip( 'Right', 1, [quaternionKF] );
+    this.rightClipAction = this.mixer.clipAction( clip );
+    this.rightClipAction.loop = THREE.LoopOnce;
+
+    // Left rotation clip
+    qFinal = new THREE.Quaternion().setFromAxisAngle( yAxis, Math.PI/2 );
+    quaternionKF = new THREE.QuaternionKeyframeTrack( '.quaternion', [ 0, 1], [ qInitial.x, qInitial.y, qInitial.z, qInitial.w, qFinal.x, qFinal.y, qFinal.z, qFinal.w] );
+    clip = new THREE.AnimationClip( 'Left', 1, [quaternionKF] );
+    this.leftClipAction = this.mixer.clipAction( clip );
+    this.leftClipAction.loop = THREE.LoopOnce;
 
     this.renderer = new THREE.WebGLRenderer();
     this.renderer.setPixelRatio( window.devicePixelRatio );
@@ -176,6 +190,20 @@ rotateDown = () => {
   if (!this.downClipAction.isRunning()){
     this.downClipAction.reset();
     this.downClipAction.play();
+  }
+}
+
+rotateRight = () => {
+  if (!this.rightClipAction.isRunning()){
+    this.rightClipAction.reset();
+    this.rightClipAction.play();
+  }
+}
+
+rotateLeft = () => {
+  if (!this.leftClipAction.isRunning()){
+    this.leftClipAction.reset();
+    this.leftClipAction.play();
   }
 }
 
