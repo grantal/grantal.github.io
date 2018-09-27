@@ -180,32 +180,41 @@ renderScene = () => {
 }
 
 rotateUp = () => {
-  if (!this.upClipAction.isRunning()){
+  if (this.animationCond()){
     this.upClipAction.reset();
     this.upClipAction.play();
   }
 }
 
 rotateDown = () => {
-  if (!this.downClipAction.isRunning()){
+  if (this.animationCond()){
     this.downClipAction.reset();
     this.downClipAction.play();
   }
 }
 
 rotateRight = () => {
-  if (!this.rightClipAction.isRunning()){
+  if (this.animationCond()){
     this.rightClipAction.reset();
     this.rightClipAction.play();
   }
 }
 
 rotateLeft = () => {
-  if (!this.leftClipAction.isRunning()){
+  if (this.animationCond()){
     this.leftClipAction.reset();
     this.leftClipAction.play();
   }
 }
+
+// will prevent animation from happening if false
+animationCond = () => {
+  return (!this.upClipAction.isRunning()) &&
+         (!this.downClipAction.isRunning()) &&
+         (!this.rightClipAction.isRunning()) &&
+         (!this.leftClipAction.isRunning());
+}
+
 
 render(){
     return(
